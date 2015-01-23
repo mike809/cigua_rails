@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'password_resets/new'
+
+  get 'password_resets/edit'
+
   get 'sessions/new'
 
   get 'users/new'
@@ -26,7 +30,8 @@ Rails.application.routes.draw do
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
     resources :users
-
+    resources :account_activations, only: [:edit]
+    resources :password_resets, only: [:new, :create, :edit, :update]
   # Example resource route with options:
   #   resources :products do
   #     member do
