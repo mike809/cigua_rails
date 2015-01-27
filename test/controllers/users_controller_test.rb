@@ -66,4 +66,9 @@ class UsersControllerTest < ActionController::TestCase
   																				admin: true}
 		assert_not @other_user.reload.admin?
   end
+
+  test "should redirect followers when not logged in" do
+    get :followers, id: @user
+    assert_redirected_to login_url
+  end
 end
