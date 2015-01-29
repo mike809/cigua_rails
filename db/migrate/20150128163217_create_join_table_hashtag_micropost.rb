@@ -4,7 +4,8 @@ class CreateJoinTableHashtagMicropost < ActiveRecord::Migration
       t.index [:hashtag_id, :micropost_id], unique: true
       # t.index [:micropost_id, :hashtag_id]
     end
+    add_foreign_key :hashtags_microposts, :hashtags
+  	add_foreign_key :hashtags_microposts, :microposts
   end
-  add_foreign_key :hashtags_microposts, :hashtags
-  add_foreign_key :hashtags_microposts, :microposts
+
 end
