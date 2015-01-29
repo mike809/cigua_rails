@@ -6,6 +6,11 @@ class Micropost < ActiveRecord::Base
   validates :content, presence: true, length: {maximum: 140}
   validate :picture_size
 
+  has_and_belongs_to_many :hashtags, class_name: "Hashtag",
+                                     join_table: :hashtags_microposts,
+                                     foreign_key: "micropost_id",
+                                     dependent: :destroy
+  after_create :analyze_micropost
   private
 
   	# validates the size of an uploaded picture.
@@ -14,5 +19,20 @@ class Micropost < ActiveRecord::Base
   			errors.add(:picture, "should be less than 5MB")
   		end
   	end
+
+    def analyze_micropost
+      # analyze content
+      hashtags_found = self.content.scan(/\B#\w+/).map { |ht| ht.delete("#").downcase  }
+      if hashtags_found
+        hashtags_found.each do |ht|
+          # if its a new hashtag
+          if Hashtag.where(name: ht).empty?
+            hashtags << Hashtag.create!(name: ht)
+          else
+            hashtags << Hashtag.where(name: ht).first
+          end
+        end
+      end
+    end
 end
 

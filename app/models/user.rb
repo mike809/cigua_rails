@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
 	has_many :followers, through: :passive_relationships, source: :follower
 	attr_accessor :remember_token, :activation_token, :reset_token
 
-	before_save :downcase_email
+	before_save :downcase_email , :downcase_username
 	before_create :create_activation_digest
 	validates :name, presence: true, length: {maximum: 50}
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
@@ -18,7 +18,7 @@ class User < ActiveRecord::Base
 										format: {with: VALID_EMAIL_REGEX}, 
 										uniqueness: { case_sensitive: false}
 	validates :password, length: {minimum: 6}, allow_blank: true
-
+	validates :username, length: {minimum: 4}, presence: true
 	has_secure_password
 
 	# returns the hash digest of the given string
@@ -109,6 +109,11 @@ class User < ActiveRecord::Base
 		# converts email to all lower-case
 		def downcase_email
 			self.email = email.downcase
+		end
+
+		# converts username to all lower-case
+		def downcase_username
+			self.username = username.downcase
 		end
 
 		# creates and assigns the activation token and digest.
