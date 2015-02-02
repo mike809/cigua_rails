@@ -9,7 +9,9 @@
 					<%= link_to gravatar_for(cigua.user, size: 50), cigua.user %>
 					<span class="user"> <%= link_to cigua.user.name, cigua.user %></span><br>
 					<span class="content"> 
-						<%= cigua.content %>
+						<% cigua.content.split().each do |word| %>
+							<%= is_hashtag?(word) == true ? link_to(word, search_path(search: word), method: :get ) : word %>  
+						<% end %>
 						<%= image_tag cigua.picture.url if cigua.picture? %>
 					</span><br>
 					<span class="timestamp">
